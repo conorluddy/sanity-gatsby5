@@ -1,13 +1,15 @@
+require('dotenv').config();
+
 module.exports = {
   siteMetadata: {
     title: `Gatsby Starter Blog`,
     author: {
       name: `Kyle Mathews`,
       summary: `who lives and works in San Francisco building useful things.`,
-      twitter: `kylemathews`,
+      twitter: `kylemathews`
     },
     description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
+    siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -15,15 +17,15 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/content/blog`,
-        name: `blog`,
-      },
+        name: `blog`
+      }
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
-        path: `${__dirname}/src/images`,
-      },
+        path: `${__dirname}/src/images`
+      }
     },
     {
       resolve: `gatsby-transformer-remark`,
@@ -32,20 +34,20 @@ module.exports = {
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 630,
-            },
+              maxWidth: 630
+            }
           },
           {
             resolve: `gatsby-remark-responsive-iframe`,
             options: {
-              wrapperStyle: `margin-bottom: 1.0725rem`,
-            },
+              wrapperStyle: `margin-bottom: 1.0725rem`
+            }
           },
           `gatsby-remark-prismjs`,
           `gatsby-remark-copy-linked-files`,
-          `gatsby-remark-smartypants`,
-        ],
-      },
+          `gatsby-remark-smartypants`
+        ]
+      }
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
@@ -66,16 +68,16 @@ module.exports = {
         `,
         feeds: [
           {
-            serialize: ({ query: { site, allMarkdownRemark } }) => {
+            serialize: ({query: {site, allMarkdownRemark}}) => {
               return allMarkdownRemark.nodes.map(node => {
                 return Object.assign({}, node.frontmatter, {
                   description: node.excerpt,
                   date: node.frontmatter.date,
                   url: site.siteMetadata.siteUrl + node.fields.slug,
                   guid: site.siteMetadata.siteUrl + node.fields.slug,
-                  custom_elements: [{ "content:encoded": node.html }],
-                })
-              })
+                  custom_elements: [{'content:encoded': node.html}]
+                });
+              });
             },
             query: `
               {
@@ -94,11 +96,11 @@ module.exports = {
                 }
               }
             `,
-            output: "/rss.xml",
-            title: "Gatsby Starter Blog RSS Feed",
-          },
-        ],
-      },
+            output: '/rss.xml',
+            title: 'Gatsby Starter Blog RSS Feed'
+          }
+        ]
+      }
     },
     {
       resolve: `gatsby-plugin-manifest`,
@@ -111,8 +113,21 @@ module.exports = {
         // https://css-tricks.com/meta-theme-color-and-trickery/
         // theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
-      },
+        icon: `src/images/gatsby-icon.png` // This path is relative to the root of the site.
+      }
     },
-  ],
-}
+    {
+      resolve: `gatsby-source-sanity`,
+      options: {
+        projectId: process.env.SANITY_PROJECT_ID,
+        dataset: process.env.SANITY_DATASET,
+        token: process.env.SANITY_TOKEN,
+
+        // If the Sanity GraphQL API was deployed using `--tag <name>`,
+        // use `graphqlTag` to specify the tag name. Defaults to `default`.
+        graphqlTag: 'default'
+      }
+    },
+    `gatsby-plugin-image`
+  ]
+};

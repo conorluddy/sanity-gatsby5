@@ -3,9 +3,10 @@
   "description": "A demo starter for a blog powered by Gatsby and Markdown, using Gatsby Slices",
   "version": "0.1.0",
   "dependencies": {
+    "@portabletext/react": "^1.0.6",
     "gatsby": "next",
     "gatsby-plugin-feed": "next",
-    "gatsby-plugin-image": "next",
+    "gatsby-plugin-image": "^3.0.0-next.4",
     "gatsby-plugin-manifest": "next",
     "gatsby-plugin-sharp": "next",
     "gatsby-remark-copy-linked-files": "next",
@@ -14,6 +15,7 @@
     "gatsby-remark-responsive-iframe": "next",
     "gatsby-remark-smartypants": "next",
     "gatsby-source-filesystem": "next",
+    "gatsby-source-sanity": "^7.5.1",
     "gatsby-transformer-remark": "next",
     "gatsby-transformer-sharp": "next",
     "prismjs": "^1.29.0",
@@ -23,6 +25,7 @@
     "typeface-montserrat": "0.0.75"
   },
   "devDependencies": {
+    "dotenv": "^16.0.3",
     "prettier": "^2.7.1"
   },
   "keywords": [

@@ -1,5 +1,5 @@
-const path = require(`path`)
-const { createFilePath } = require(`gatsby-source-filesystem`)
+const path = require(`path`);
+const {createFilePath} = require(`gatsby-source-filesystem`);
 
 exports.sourceNodes = ({actions: {createNode}, createNodeId, createContentDigest}) => {
   const authors = [
@@ -7,82 +7,81 @@ exports.sourceNodes = ({actions: {createNode}, createNodeId, createContentDigest
       name: `Kyle Mathews`,
       authorId: `kylem`,
       summary: `who lives and works in San Francisco building useful things.`,
-      twitter: `kylemathews`,
+      twitter: `kylemathews`
     },
     {
       name: `Josh Johnson`,
       authorId: `joshj`,
       summary: `who lives and works in Michigan building neat things.`,
-      twitter: `0xJ05H`,
+      twitter: `0xJ05H`
     }
-  ]
+  ];
 
-  authors.map(author => createNode({
-    ...author,
-    id: createNodeId(author.authorId),
-    internal: {
-      type: `Author`,
-      contentDigest: createContentDigest(author)
-    }
-  }));
+  authors.map(author =>
+    createNode({
+      ...author,
+      id: createNodeId(author.authorId),
+      internal: {
+        type: `Author`,
+        contentDigest: createContentDigest(author)
+      }
+    })
+  );
 };
 
-exports.createPages = async ({ graphql, actions, reporter }) => {
-  const { createPage, createSlice } = actions
+exports.createPages = async ({graphql, actions, reporter}) => {
+  const {createPage, createSlice} = actions;
 
   /**
    * Create general slices
    */
   createSlice({
     id: `header`,
-    component: require.resolve(`./src/components/header.js`),
-  })
+    component: require.resolve(`./src/components/header.js`)
+  });
 
   createSlice({
     id: `footer`,
-    component: require.resolve(`./src/components/footer.js`),
-  })
-  
+    component: require.resolve(`./src/components/footer.js`)
+  });
+
   /**
    * Create slices for each author bio
    */
 
   // Define a component for author bio
-  const authorBio = path.resolve(`./src/components/bio.js`)
+  const authorBio = path.resolve(`./src/components/bio.js`);
 
   const authorResults = await graphql(
     `
-    {
-      allAuthor {
-        nodes {
-          authorId
+      {
+        allAuthor {
+          nodes {
+            authorId
+          }
         }
       }
-    }
     `
-  )
+  );
 
   if (authorResults.errors) {
-    reporter.panicOnBuild(
-      `There was an error loading your authors`,
-      authorResults.errors
-    )
-    return
+    reporter.panicOnBuild(`There was an error loading your authors`, authorResults.errors);
+    return;
   }
 
-  const authors = authorResults.data.allAuthor.nodes
+  const authors = authorResults.data.allAuthor.nodes;
 
   if (authors.length > 0) {
-    authors.forEach((author) => {
+    authors.forEach(author => {
       // create slice for author
       createSlice({
         id: `bio--${author.authorId}`,
         component: authorBio,
         context: {
-          id: author.authorId,
+          id: author.authorId
         }
-      })
-    })
+      });
+    });
   }
 
   /**
@@ -90,36 +89,34 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
    */
 
   // Define a template for blog post
-  const blogPost = path.resolve(`./src/templates/blog-post.js`)
+  const blogPost = path.resolve(`./src/templates/blog-post.js`);
+  const pageTemplate = path.resolve(`./src/templates/page.js`);
 
   // Get all markdown blog posts sorted by date
   const blogResults = await graphql(
     `
-    {
-      allMarkdownRemark(sort: {frontmatter: { date: ASC }}, limit: 1000) {
-        nodes {
-          frontmatter {
-            authorId
-          }
-          id
-          fields {
-            slug
+      {
+        allMarkdownRemark(sort: {frontmatter: {date: ASC}}, limit: 1000) {
+          nodes {
+            frontmatter {
+              authorId
+            }
+            id
+            fields {
+              slug
+            }
           }
         }
       }
-    }
     `
-  )
+  );
 
   if (blogResults.errors) {
-    reporter.panicOnBuild(
-      `There was an error loading your blog posts`,
-      blogResults.errors
-    )
-    return
+    reporter.panicOnBuild(`There was an error loading your blog posts`, blogResults.errors);
+    return;
   }
 
-  const posts = blogResults.data.allMarkdownRemark.nodes
+  const posts = blogResults.data.allMarkdownRemark.nodes;
 
   // Create blog posts pages
   // But only if there's at least one markdown file found at "content/blog" (defined in gatsby-config.js)
@@ -128,8 +125,8 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   if (posts.length > 0) {
     posts.forEach((post, index) => {
       // create blog post
-      const previousPostId = index === 0 ? null : posts[index - 1].id
-      const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id
+      const previousPostId = index === 0 ? null : posts[index - 1].id;
+      const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id;
 
       createPage({
         path: post.fields.slug,
@@ -137,48 +134,77 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
         context: {
           id: post.id,
           previousPostId,
-          nextPostId,
+          nextPostId
         },
         slices: {
           // Instruct this blog page to use the matching bio slice
           // Any time the "bio" alias is seen, it'll use the "bio--${authorId}" slice
-          bio: `bio--${post.frontmatter.authorId}`,
+          bio: `bio--${post.frontmatter.authorId}`
         }
-      })
-    })
+      });
+    });
   }
-}
 
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
+  const pages = await graphql(`
+    {
+      allSanityPage {
+        nodes {
+          id
+          title
+          slug {
+            current
+          }
+        }
+      }
+    }
+  `);
+
+  if (pages.errors) {
+    throw pages.errors;
+  }
+
+  const pagesData = pages.data.allSanityPage.nodes || [];
+
+  pagesData.forEach((node, index) => {
+    const path = `/page/${node.slug.current}`;
+    createPage({
+      path,
+      component: pageTemplate,
+      context: {id: node.id}
+    });
+  });
+};
+
+exports.onCreateNode = ({node, actions, getNode}) => {
+  const {createNodeField} = actions;
 
   // create slugs for all blog posts
   if (node.internal.type === `MarkdownRemark`) {
-    const value = createFilePath({ node, getNode })
+    const value = createFilePath({node, getNode});
 
     createNodeField({
       name: `slug`,
       node,
-      value,
-    })
+      value
+    });
   }
 
   // add an authorId for all author avatars
   if (node.internal.type === `ImageSharp`) {
-    const parent = getNode(node.parent)
+    const parent = getNode(node.parent);
 
     if (parent.relativeDirectory === 'author') {
       createNodeField({
         node,
         name: 'authorId',
-        value: parent.name,
-      })
+        value: parent.name
+      });
     }
   }
-}
+};
 
-exports.createSchemaCustomization = ({ actions }) => {
-  const { createTypes } = actions
+exports.createSchemaCustomization = ({actions}) => {
+  const {createTypes} = actions;
 
   // Explicitly define the siteMetadata {} object
   // This way those will always be defined even if removed from gatsby-config.js
@@ -214,5 +240,5 @@ exports.createSchemaCustomization = ({ actions }) => {
     type Fields {
       slug: String
     }
-  `)
-}
+  `);
+};
