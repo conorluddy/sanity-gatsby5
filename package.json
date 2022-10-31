@@ -33,8 +33,8 @@
   ],
   "license": "0BSD",
   "scripts": {
-    "build": "gatsby build --legacy-peer-deps",
-    "develop": "gatsby develop --legacy-peer-deps",
+    "build": "gatsby build",
+    "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "start": "gatsby develop",
     "serve": "gatsby serve",
