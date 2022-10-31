@@ -1,26 +1,22 @@
-import * as React from "react"
-import { Link } from "gatsby"
+import * as React from 'react';
+import {Link} from 'gatsby';
 
 const Header = ({children, size = 'medium'}) => {
   let header = (
     <Link className="header-link-home" to="/">
-      {children}
+      {children ?? 'Home'}
     </Link>
-  )
+  );
 
-  if (size === "large") {
+  if (size === 'large') {
     header = (
       <h1 className="main-heading">
         <Link to="/">{children}</Link>
       </h1>
-    )
+    );
   }
 
-  return (
-    <header className="global-header">
-      {header}
-    </header>
-  )
-}
+  return <header className="global-header">{header}</header>;
+};
 
-export default Header
+export default Header;
