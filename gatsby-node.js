@@ -166,7 +166,7 @@ exports.createPages = async ({graphql, actions, reporter}) => {
   const pagesData = pages.data.allSanityPage.nodes || [];
 
   pagesData.forEach((node, index) => {
-    const path = `/page/${node.slug.current}`;
+    const path = `/${node.slug.current}`;
     createPage({
       path,
       component: pageTemplate,

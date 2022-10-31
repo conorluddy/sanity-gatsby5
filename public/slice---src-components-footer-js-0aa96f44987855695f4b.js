@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkgatsby_starter_slices=self.webpackChunkgatsby_starter_slices||[]).push([[320],{1619:function(e,t,s){s.r(t);var a=s(7294);t.default=()=>a.createElement("footer",null,"© ",(new Date).getFullYear(),", Built with"," ",a.createElement("a",{href:"https://www.gatsbyjs.com"},"Gatsby")," ",a.createElement("i",null,a.createElement("a",{href:"https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-slice"},"(and Slices!)")))}}]);
+//# sourceMappingURL=slice---src-components-footer-js-0aa96f44987855695f4b.js.map
