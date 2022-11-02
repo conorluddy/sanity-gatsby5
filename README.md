@@ -1,4 +1,5 @@
-Experimenting with using Sanity.io as a headless CMS with a Gatsby 5 front-end. Bare minimum at the moment, builds static pages from content hosted with Sanity.io and deploys it to Github pages.
+Experimenting with using Sanity.io as a headless CMS with a Gatsby 5 front-end. 
+Changes published on Sanity currently trigger the build and deploy it to Github pages.
 
 
 [![Deploy Gatsby site to Pages](https://github.com/conorluddy/sanity-gatsby5/actions/workflows/gatsby.yml/badge.svg)](https://github.com/conorluddy/sanity-gatsby5/actions/workflows/gatsby.yml)
